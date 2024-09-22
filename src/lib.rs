@@ -60,6 +60,14 @@ pub fn verify(data: &[u8], sig: &[u8], pubkey: &[u8])
     }
 }
 
+pub fn sha256_b64(input: &[u8]) -> String {
+    use sha2::{Sha256, Digest};
+    let mut hash = Sha256::new();
+    hash.update(input);
+    let checksum = hash.finalize();
+    base64::encode(checksum)
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -103,5 +111,18 @@ mod test {
         let bad_data = b"goodbye";
         assert!(
             verify(bad_data, &signature, &pubkey).is_err());
+    }
+
+    #[test]
+    fn test_checksums() {
+        let a = sha256_b64("hello".as_bytes());
+        let b = sha256_b64("world".as_bytes());
+        assert!(a != b);
+
+        // 256 bit checksum
+        // base64 emits a character per 6 bits
+        // 256/6 = 42.66, output padded to multiple of 4 -> 44
+        assert_eq!(44, a.len());
+        assert_eq!(44, b.len());
     }
 }

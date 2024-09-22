@@ -26,7 +26,7 @@ const SIGNATURE_PREFIX : &str =
 
 // TraceChecker is used by tests, to ensure that all traces
 // in the repo are verifiably from the chiplab server.
-struct TraceChecker {
+pub struct TraceChecker {
     pubkey: Vec<u8>,
 }
 
@@ -69,7 +69,8 @@ impl TraceChecker {
 
 // TraceSigner is used by the chiplab, to produce signed trace
 // output that can be used in by the model repositories.
-struct TraceSigner {
+#[derive(Clone)]
+pub struct TraceSigner {
     privkey: Vec<u8>,
 }
 

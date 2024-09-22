@@ -231,6 +231,7 @@ dependencies = [
  "base64",
  "p256",
  "rand",
+ "sha2",
 ]
 
 [[package]]
