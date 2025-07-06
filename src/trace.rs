@@ -38,8 +38,10 @@ impl TraceChecker {
     }
 
 
-    pub fn verify_trace(&self, trace: &str) ->
-        Result<(), String> {
+    // verify_trace checks that the signature is valid, and returns
+    // the trace that was signed on success.
+    pub fn verify_trace<'a>(&self, trace: &'a str) ->
+        Result<&'a str, String> {
         // The body that was signed is between PREFIX and SUFFIX.
         // The signature is the first Signature= line after the suffix.
         let prefix_start =
@@ -63,7 +65,8 @@ impl TraceChecker {
             .or(Err("Invalid base64".to_string()))?;
 
         // Finally verify
-        crate::verify(message.as_bytes(), &sig, &self.pubkey)
+        crate::verify(message.as_bytes(), &sig, &self.pubkey)?;
+        Ok(message)
     }
 }
 
